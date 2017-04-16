@@ -2,7 +2,6 @@
 Basic eCommerce automation with Spring-MVC.
 
 Just open&run the project with IntelliJ IDEA. 
-
 By default project settings, login page can be accessed via URL: http://localhost:8080/shop
 
 Ever so project is self-explanatory, here is a little information:
