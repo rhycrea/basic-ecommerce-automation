@@ -7,8 +7,8 @@ By default project settings, login page can be accessed via URL: http://localhos
 Ever so project is self-explanatory, a little information doesnt hurts:
 
 ### General
-- Databases are initialized locally in init() method of MainController class.
-- Authorization is handling by Spring-Filters
+Databases are initialized locally in init() method of MainController class.
+Authorization is handling by Spring-Filters
 
 ### Owner
 - Owner hardcoded as uname/pass = patron/patron and can only be changed within Owner class.
