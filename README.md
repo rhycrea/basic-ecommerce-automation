@@ -7,7 +7,10 @@ By default project settings, login page can be accessed via URL: http://localhos
 Ever so project is self-explanatory, a little information doesnt hurts:
 
 ### General
-- Databases are initialized locally in init() method of MainController class.
+- Project consist ~20 class and ~15 jsp view files.
+- .tag format files used as main views of the project.
+- Databases are initialized locally in init() method of MainController class. 
+- GenericDao approach used for handling database operations.
 - Authorization is handling by Spring-Filters
 
 ### Owner
