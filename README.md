@@ -6,6 +6,9 @@ By default project settings, login page can be accessed via URL: http://localhos
 
 Ever so project is self-explanatory, here is a little information:
 
+- Databases are initialized locally in init() method of MainController class.
+- Authorization is handling by Spring-Filters
+
 ### Owner
 - Owner hardcoded as uname/pass = patron/patron and can only be changed within Owner class.
 - Owner can register a product or a new user, and can edit registered ones.
@@ -16,5 +19,4 @@ Ever so project is self-explanatory, here is a little information:
 - A customer can display his past orders and their status(sent or not sent).
 
 
-- Databases are initialized locally in init() method of MainController class.
-- Authorization is handling by Spring-Filters
+
