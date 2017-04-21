@@ -15,4 +15,5 @@ Ever so project is self-explanatory, here is a little information:
 - A customer can order a product, edit his information (except its username).
 - A customer can display his past orders and their status(sent or not sent).
 
-Databases are initialized locally in init() method of MainController class.
+- Databases are initialized locally in init() method of MainController class.
+- Authorization is handling by Spring-Filters
