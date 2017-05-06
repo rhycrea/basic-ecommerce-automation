@@ -1,5 +1,5 @@
 # basic-ecommerce-automation
-Basic eCommerce automation with Spring-MVC.
+Basic eCommerce automation with Spring-MVC and Hibernate.
 
 Just open&run the project with IntelliJ IDEA. 
 By default project settings, login page can be accessed via URL: http://localhost:8080/shop
@@ -7,9 +7,9 @@ By default project settings, login page can be accessed via URL: http://localhos
 Ever so project is self-explanatory, here is a little information:
 
 ### General
-- Project consist ~20 class and ~15 jsp view files.
-- .tag format files used as main views of the project.
-- Databases are initialized locally in init() method of MainController class. 
+- .tag templates used as outline view modules of the project.
+- Databases are handled by Hibernate
+- Hibernate configured with PostgreSQL default in HibernateConfig.java
 - GenericDao approach used for handling database operations.
 - Authorization is handling by Spring-Filters
 
