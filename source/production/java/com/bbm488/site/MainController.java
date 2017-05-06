@@ -8,6 +8,7 @@ import com.bbm488.site.owner.ProductController;
 import com.bbm488.site.owner.ProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,12 +26,16 @@ import java.util.Map;
 @Controller
 public class MainController
 {
-    @Autowired
-    private OrderDao orderDao;
+    @PostConstruct
+    public void init() {
+        //defining username/password for the administrator of the system.
+        Owner.setUname("patron");
+        Owner.setUpass("patron");
+    }
+
     @Autowired
     private CustomerDao customerDao;
-    @Autowired
-    private ProductDao productDao;
+
 
     @RequestMapping("/")
     public ModelAndView index()
@@ -61,6 +66,7 @@ public class MainController
         return new ModelAndView("/login");
     }
 
+    @Transactional(readOnly = true)
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ModelAndView login(Map<String, Object> model, HttpSession session,
                               HttpServletRequest request, Form form)
@@ -81,8 +87,8 @@ public class MainController
         }
 
         if(form.getUsername() == null || form.getPassword() == null ||
-                !customerDao.getDatabase().containsKey(form.getUsername()) ||
-                !form.getPassword().equals(customerDao.find(form.getUsername()).getUpass()) )
+                customerDao.findByUname(form.getUsername()) == null ||
+                !form.getPassword().equals(customerDao.findByUname(form.getUsername()).getUpass()) )
         {
             form.setPassword(null);
             model.put("loginFailed", true);
@@ -95,151 +101,7 @@ public class MainController
         return this.customerPageRedirect();
     }
 
-    @PostConstruct
-    public void init() throws Exception {
-        Owner.setUname("patron");
-        Owner.setUpass("patron");
 
-        //--------------------HANDLE CUSTOMER DATABASE--------------------
-        try(
-                InputStream file = new FileInputStream("customerDB2.ser");
-                InputStream buffer = new BufferedInputStream(file);
-                ObjectInput input = new ObjectInputStream (buffer);
-        ){
-            //deserialize the List
-            customerDao.setDatabase( (Hashtable<String,Customer>)input.readObject() );
-        }
-        catch(ClassNotFoundException e){
-            System.out.println("Class not found error!");
-        }
-        catch(IOException e){
-            System.out.println("Database file cannot found! New database initializing...");
-            customerDao.initDatabase();
-        }
-        catch(NullPointerException e){
-            System.out.println("Database file is empty! New database initializing...");
-            customerDao.initDatabase();
-        }
-
-        //--------------------HANDLE PRODUCT DATABASE--------------------
-        try(
-                InputStream file = new FileInputStream("productDB5.ser");
-                InputStream buffer = new BufferedInputStream(file);
-                ObjectInput input = new ObjectInputStream (buffer);
-        ){
-            //deserialize the List
-            productDao.setDatabase( (Hashtable<Integer,Product>)input.readObject() );
-        }
-        catch(ClassNotFoundException e){
-            System.out.println("Class not found error!");
-        }
-        catch(IOException e){
-            System.out.println("Database file cannot found! New database initializing...");
-            productDao.initDatabase();
-        }
-        catch(NullPointerException e){
-            System.out.println("Database file is empty! New database initializing...");
-            productDao.initDatabase();
-        }
-
-        //--------------------HANDLE ORDER DATABASE--------------------
-        try(
-                InputStream file = new FileInputStream("orderDB.ser");
-                InputStream buffer = new BufferedInputStream(file);
-                ObjectInput input = new ObjectInputStream (buffer);
-        ){
-            //deserialize the List
-            orderDao.setDatabase( (Hashtable<Integer,Order>)input.readObject() );
-        }
-        catch(ClassNotFoundException e){
-            System.out.println("Class not found error!");
-        }
-        catch(IOException e){
-            System.out.println("Order Database file cannot found! New database initializing...");
-            orderDao.initDatabase();
-        }
-        catch(NullPointerException e){
-            System.out.println("Order Database file is empty! New database initializing...");
-            orderDao.initDatabase();
-        }
-
-
-        //Below, we are trying to find a valid ID sequence value for further order and product records.
-        if(orderDao.getDatabase().isEmpty()){
-            OrderController.setOrderIdSequence(1);
-        }
-        else {
-            Iterator<Map.Entry<Integer, Order>> it = orderDao.getDatabase().entrySet().iterator();
-            int minID=1;
-            while (it.hasNext()) {
-                Order order = it.next().getValue();
-                if(order.getID()>minID) {
-                    minID = order.getID();
-                }
-            }
-            OrderController.setOrderIdSequence(++minID); //guarantee a minimum ID value that is higher than all others.
-        }
-
-        if(productDao.getDatabase().isEmpty()){
-            ProductController.setProductIdSequence(1);
-        }
-        else {
-            Iterator<Map.Entry<Integer, Product>> it = productDao.getDatabase().entrySet().iterator();
-            int minID=1;
-            while (it.hasNext()) {
-                Product order = it.next().getValue();
-                if(order.getID()>minID) {
-                    minID = order.getID();
-                }
-            }
-            ProductController.setProductIdSequence(++minID);
-        }
-    }
-
-    @PreDestroy
-    public void destroy() throws Exception {
-
-        //--------------------DESTROY CUSTOMER DATABASE--------------------
-
-        try (
-                OutputStream file = new FileOutputStream("customerDB2.ser");
-                OutputStream buffer = new BufferedOutputStream(file);
-                ObjectOutput output = new ObjectOutputStream(buffer);
-        ){
-            output.writeObject(customerDao.getDatabase());
-        }
-        catch(IOException ex){
-            System.out.println("File error!");
-        }
-
-        //--------------------DESTROY PRODUCT DATABASE--------------------
-
-        try (
-                OutputStream file = new FileOutputStream("productDB5.ser");
-                OutputStream buffer = new BufferedOutputStream(file);
-                ObjectOutput output = new ObjectOutputStream(buffer);
-        ){
-            output.writeObject(productDao.getDatabase());
-        }
-        catch(IOException ex){
-            System.out.println("File error!");
-        }
-        
-        //--------------------DESTROY ORDER DATABASE--------------------
-        
-        try (
-                OutputStream file = new FileOutputStream("orderDB.ser");
-                OutputStream buffer = new BufferedOutputStream(file);
-                ObjectOutput output = new ObjectOutputStream(buffer);
-        ){
-            output.writeObject(orderDao.getDatabase());
-        }
-        catch(IOException ex){
-            System.out.println("File error!");
-        }
-    }
-
-    //TODO: redirect hem customer hem ocaksahibi için yapılmalı. tasarım yap.
     private ModelAndView customerPageRedirect()
     {
 
@@ -276,5 +138,4 @@ public class MainController
             this.password = password;
         }
     }
-
 }

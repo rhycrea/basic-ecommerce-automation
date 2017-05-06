@@ -11,7 +11,7 @@
 <html>
     <head>
         <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-        <title>E-commerce - <c:out value="${fn:trim(htmlTitle)}" /></title>
+        <title>Shop - <c:out value="${fn:trim(htmlTitle)}" /></title>
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/css/bootstrap.min.css" />
         <link rel="stylesheet"
               href="<c:url value="/resources/css/main.css" />" />
@@ -20,7 +20,7 @@
         <jsp:invoke fragment="headContent" />
     </head>
     <body>
-        <h1>E-commerce</h1>
+        <h1>Shop</h1>
         <table border="0" id="bodyTable">
             <tbody>
                 <tr>

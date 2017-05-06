@@ -3,6 +3,7 @@ package com.bbm488.site.owner;
 import com.bbm488.site.customer.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,12 +22,12 @@ import java.util.Map;
 public class CustomerController {
 
     @Autowired
-    private CustomerDao dao;
+    private CustomerDao customerDao;
 
     @RequestMapping(value = {"", "list"}, method = RequestMethod.GET)
     public String list(Map<String, Object> model)
     {
-        model.put("customerDB", dao.getDatabase());
+        model.put("customerDB", customerDao.findAll());
         return "owner/customer_crud/list";
     }
 
@@ -37,6 +38,7 @@ public class CustomerController {
         return "owner/customer_crud/create";
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = {"create"}, method = RequestMethod.POST)
     public View create(Form form)
     {
@@ -48,7 +50,7 @@ public class CustomerController {
         customer.setFloor(form.getFloor());
         customer.setApt(form.getApt());
         customer.setRoom(form.getRoom());
-        dao.create(form.getUname(),customer);
+        customerDao.save(customer);
         return new RedirectView("/owner/customer_crud/list", true, false);
     }
 
@@ -56,7 +58,7 @@ public class CustomerController {
     public ModelAndView edit(Map<String, Object> model,
                              @PathVariable("uname") String uname)
     {
-        Customer customer = dao.find(uname);
+        Customer customer = customerDao.findByUname(uname);
         if(customer == null)
             return this.getListRedirectModelAndView();
         model.put("customer", customer);
@@ -66,6 +68,7 @@ public class CustomerController {
         return new ModelAndView("owner/customer_crud/edit");
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = "edit/*", method = RequestMethod.POST)
     public View edit(Form form)
     {
@@ -80,15 +83,16 @@ public class CustomerController {
         customer.setFloor(form.getFloor());
         customer.setApt(form.getApt());
         customer.setRoom(form.getRoom());
-        dao.update(form.getOldKey(),customer);
+        customerDao.saveOrUpdate(customer);
         return new RedirectView("/owner/customer_crud/list", true, false);
 
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = "delete/{uname}", method = RequestMethod.GET)
     public View delete(@PathVariable("uname") String uname)
     {
-        dao.delete(uname);
+        customerDao.delete(customerDao.findByUname(uname));
         return new RedirectView("/owner/customer_crud/list", true, false);
 
     }

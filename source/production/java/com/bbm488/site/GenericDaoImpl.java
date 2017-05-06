@@ -4,20 +4,25 @@ package com.bbm488.site;
  * Created by Aybars on 9.04.2017.
  */
 
-import com.bbm488.site.customer.Customer;
 import com.bbm488.site.owner.Owner;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Example;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Hashtable;
-import java.util.Map;
+import java.util.List;
+
+@SuppressWarnings("unchecked")
+@Transactional
+public abstract class GenericDaoImpl<E> implements GenericDao<E> {
 
 
-public abstract class GenericDaoImpl<K,T> implements GenericDao<K,T> {
 
-
-
-    private Class<T> type;
+    public final Class<E> type;
 
     public GenericDaoImpl() {
         Type t = getClass().getGenericSuperclass();
@@ -25,51 +30,62 @@ public abstract class GenericDaoImpl<K,T> implements GenericDao<K,T> {
         type = (Class) pt.getActualTypeArguments()[0];
     }
 
-    @Override
-    public long countAll(final Map<String, Object> params) {
-        return 12;
+    @Autowired
+    private SessionFactory sessionFactory;
+
+    protected Session getSession() {
+        return this.sessionFactory.getCurrentSession();
     }
 
     @Override
-    public T create(final K k, final T t) {
-        if(getDatabase(t).containsKey(k)) {
-            return null;
+    public E findById(final Serializable id) {
+        return (E) getSession().get(this.type, id);
+    }
+
+    @Override
+    public Serializable save(E entity) {
+        return getSession().save(entity);
+    }
+
+    @Override
+    public void saveOrUpdate(E entity) {
+        getSession().saveOrUpdate(entity);
+    }
+
+    @Override
+    public void delete(E entity) {
+        getSession().delete(entity);
+    }
+
+    @Override
+    public void deleteAll() {
+        List<E> entities = findAll();
+        for (E entity : entities) {
+            getSession().delete(entity);
         }
-        getDatabase(t).put(k,t);
-        return t;
     }
 
     @Override
-    public void delete(final K k) {
+    public List<E> findAll() {
+        return getSession().createCriteria(this.type).list();
     }
 
     @Override
-    public T find(final K k) {
-        return (T)new String();
+    public List<E> findAllByExample(E entity) {
+        Example example = Example.create(entity).ignoreCase().enableLike().excludeZeroes();
+        return getSession().createCriteria(this.type).add(example).list();
     }
 
     @Override
-    public T update(final K k, final T t) {
+    public void clear() {
+        getSession().clear();
 
-        getDatabase(t).put(k,t);
-        return t;
     }
 
     @Override
-    public Hashtable getDatabase(final T t) {
-        if(t.getClass().isAssignableFrom(Customer.class)) {
-            System.out.println("GenericDaoImpl: getDatabase: t.getClass(): " + t.getClass());
-            return Database.getCustomerDB();
-        }
-        else if(t.getClass().isAssignableFrom(Order.class)) {
-            System.out.println("GenericDaoImpl: getDatabase: t.getClass(): " + t.getClass());
-            return Database.getOrderDB();
-        }
-        else if(t.getClass().isAssignableFrom(Product.class)) {
-            System.out.println("GenericDaoImpl: getDatabase: t.getClass(): " + t.getClass());
-            return Database.getProductDB();
-        }
-        return null;
+    public void flush() {
+        getSession().flush();
+
     }
 
     public String getOwnerUname() {

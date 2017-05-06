@@ -1,7 +1,7 @@
 <%--@elvariable id="createFailed" type="java.lang.Boolean"--%>
 <%--@elvariable id="productCrudForm" type="com.bbm488.site.owner.ProductController.Form"--%>
 <template:owner htmlTitle="Product CRUD" bodyTitle="Product CRUD">
-    You must log in to access the product support site.<br /><br />
+   Add any product:<br /><br />
     <c:if test="${createFailed}">
         <b>The username you entered already registered!</b><br /><br />
     </c:if>

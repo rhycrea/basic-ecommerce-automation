@@ -1,9 +1,9 @@
 package com.bbm488.site.owner;
 
 import com.bbm488.site.Product;
-import com.bbm488.site.customer.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
@@ -21,17 +21,16 @@ import java.util.Map;
 @RequestMapping("owner/product")
 public class ProductController {
 
-    private static volatile int PRODUCT_ID_SEQUENCE = 1;
-
     @Autowired
-    private ProductDao dao;
+    private ProductDao productDao;
 
     @RequestMapping(value = {"", "list"}, method = RequestMethod.GET)
     public String list(Map<String, Object> model)
     {
-        model.put("productDB", dao.getDatabase());
+        model.put("productDB", productDao.findAll());
         return "owner/product/list";
     }
+
 
     @RequestMapping(value = {"create"}, method = RequestMethod.GET)
     public String create(Map<String, Object> model)
@@ -40,14 +39,14 @@ public class ProductController {
         return "owner/product/create";
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = {"create"}, method = RequestMethod.POST)
     public View create(Form form)
     {
         Product product = new Product();
-        product.setID(getNextProductID());
         product.setName(form.getName());
         product.setPrice(Integer.parseInt(form.getPrice()));
-        dao.create(product.getID(),product);
+        productDao.save(product);
         return new RedirectView("/owner/product/list", true, false);
     }
 
@@ -56,40 +55,40 @@ public class ProductController {
     public ModelAndView edit(Map<String, Object> model,
                              @PathVariable("id") int id)
     {
-        Product product = dao.find(id);
+        Product product = productDao.findById(id);
         if(product == null)
             return this.getListRedirectModelAndView();
         model.put("product", product);
-        model.put("id", id);
         model.put("productCrudForm", new ProductController.Form());
 
         return new ModelAndView("owner/product/edit");
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = "edit/{id}", method = RequestMethod.POST)
     public View edit(ProductController.Form form)
     {
         if(form.getCheckbox()) {
-            return new RedirectView("/owner/product/delete/" + form.oldKey, true, false);
+            return new RedirectView("/owner/product/delete/" + form.ID, true, false);
         }
         Product product = new Product();
+        product.setID(form.getID());
         product.setName(form.getName());
         product.setPrice(Integer.parseInt(form.getPrice()));
-        product.setName(form.getName());
-        dao.update(Integer.parseInt(form.getOldKey()),product);
+        productDao.saveOrUpdate(product);
         return new RedirectView("/owner/product/list", true, false);
 
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
     public View delete(@PathVariable("id") String id)
     {
-        dao.delete(Integer.parseInt(id));
+        productDao.delete(productDao.findById(Integer.parseInt(id)));
         return new RedirectView("/owner/product/list", true, false);
 
     }
-    
-    
+
 
     private ModelAndView getListRedirectModelAndView()
     {
@@ -101,23 +100,18 @@ public class ProductController {
         return new RedirectView("/owner/product/list", true, false);
     }
 
-    private synchronized int getNextProductID()
-    {return this.PRODUCT_ID_SEQUENCE++;}
-
-    
     public static class Form
     {
-        private String ID;
+        private int ID;
         private String name;
         private String price;
-        private String oldKey;
         private Boolean checkbox;
 
-        public String getID() {
+        public int getID() {
             return ID;
         }
 
-        public void setID(String ID) {
+        public void setID(int ID) {
             this.ID = ID;
         }
 
@@ -137,14 +131,6 @@ public class ProductController {
             this.price = price;
         }
 
-        public String getOldKey() {
-            return oldKey;
-        }
-
-        public void setOldKey(String oldKey) {
-            this.oldKey = oldKey;
-        }
-
         public Boolean getCheckbox() {
             return checkbox;
         }
@@ -152,13 +138,5 @@ public class ProductController {
         public void setCheckbox(Boolean checkbox) {
             this.checkbox = checkbox;
         }
-    }
-
-    public static int getProductIdSequence() {
-        return PRODUCT_ID_SEQUENCE;
-    }
-
-    public static void setProductIdSequence(int productIdSequence) {
-        PRODUCT_ID_SEQUENCE = productIdSequence;
     }
 }

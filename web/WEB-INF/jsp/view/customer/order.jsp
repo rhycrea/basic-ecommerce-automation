@@ -1,4 +1,4 @@
-<%--@elvariable id="productDB" type="java.util.Map<java.lang.Integer, com.bbm488.site.Product>"--%>
+<%--@elvariable id="productDB" type="java.util.List<com.bbm488.site.Product>"--%>
 <%--@elvariable id="orderForm" type="com.bbm488.site.customer.OrderController.Form"--%>
 
 <template:customer htmlTitle="Order" bodyTitle="Order">
@@ -17,15 +17,15 @@
                 <c:forEach items="${productDB}" var="product">
                     <form:form method="post" modelAttribute="orderForm">
                         <tr class="listing">
-                            <td class="listing"><b><c:out value="${product.value.name}" /></b></td>
-                            <td class="listing"><c:out value="${product.value.price}" /></td>
+                            <td class="listing"><b><c:out value="${product.name}" /></b></td>
+                            <td class="listing"><c:out value="${product.price}" /></td>
                             <td class="listing">
                                 <form:label path="pcs">Pcs</form:label>
                                 <form:input path="pcs" value="1"/>
                             </td>
                             <td class="listing"><input type="submit" value="Order!" /></td>
                         </tr  >
-                        <form:hidden path="productID" style="display:none" value="${product.value.ID}"/>
+                        <form:hidden path="productID" style="display:none" value="${product.ID}"/>
                     </form:form>
                 </c:forEach>
             </table>

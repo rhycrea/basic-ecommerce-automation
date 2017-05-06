@@ -5,6 +5,7 @@ import com.bbm488.site.owner.CustomerDao;
 import com.bbm488.site.owner.ProductDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +30,7 @@ public class HomeController {
     @RequestMapping(value = {"", "home"}, method = RequestMethod.GET)
     public String list(Map<String, Object> model, HttpSession session)
     {
-        model.put("customer", customerDao.find((String)session.getAttribute("username")));
+        model.put("customer", customerDao.findByUname((String)session.getAttribute("username")));
         return "customer/home";
     }
 
@@ -37,7 +38,7 @@ public class HomeController {
     public ModelAndView edit(Map<String, Object> model,
                              @PathVariable("uname") String uname)
     {
-        Customer customer = customerDao.find(uname);
+        Customer customer = customerDao.findByUname(uname);
         if(customer == null)
             return this.getListRedirectModelAndView();
         model.put("customer", customer);
@@ -47,6 +48,7 @@ public class HomeController {
         return new ModelAndView("customer/edit");
     }
 
+    @Transactional(readOnly = false)
     @RequestMapping(value = "edit/{uname}", method = RequestMethod.POST)
     public View edit(Form form)
     {
@@ -58,7 +60,7 @@ public class HomeController {
         customer.setFloor(form.getFloor());
         customer.setApt(form.getApt());
         customer.setRoom(form.getRoom());
-        customerDao.update(form.getKey(),customer);
+        customerDao.saveOrUpdate(customer);
         return new RedirectView("/customer/home", true, false);
 
     }

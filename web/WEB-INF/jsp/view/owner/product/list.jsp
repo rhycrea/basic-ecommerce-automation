@@ -1,4 +1,4 @@
-<%--@elvariable id="productDB" type="java.util.Map<Integer,com.bbm488.site.Product>"--%>
+<%--@elvariable id="productDB" type="java.util.List<com.bbm488.site.Product>"--%>
 <template:owner htmlTitle="Products" bodyTitle="Products">
     <c:choose>
         <c:when test="${fn:length(productDB) == 0}">
@@ -14,10 +14,10 @@
                 </tr >
             <c:forEach items="${productDB}" var="product">
                 <tr class="listing">
-                    <td class="listing"><b>${product.key}</b></td>
-                    <td class="listing"><c:out value="${product.value.name}" /></td>
-                    <td class="listing"><c:out value="${product.value.price}" /></td>
-                    <td class="listing"><a href="<c:url value="/owner/product/edit/${product.key}"/>">Edit</a></td>
+                    <td class="listing"><b>${product.ID}</b></td>
+                    <td class="listing"><c:out value="${product.name}" /></td>
+                    <td class="listing"><c:out value="${product.price}" /></td>
+                    <td class="listing"><a href="<c:url value="/owner/product/edit/${product.ID}"/>">Edit</a></td>
                 </tr  >
             </c:forEach>
             </table>

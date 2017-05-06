@@ -1,4 +1,4 @@
-<%--@elvariable id="results" type="java.util.Map<String, com.bbm488.site.Order>"--%>
+<%--@elvariable id="results" type="java.util.List<com.bbm488.site.Order>"--%>
 <template:customer htmlTitle="My Orders" bodyTitle="My Orders">
     <c:choose>
         <c:when test="${fn:length(results) == 0}">

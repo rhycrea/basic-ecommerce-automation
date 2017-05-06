@@ -17,14 +17,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="kahve" />
-        <module name="shop" />
+        <module name="ocak" />
         <module name="Spring-Java-Config" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="kahve" target="1.8" />
-      <module name="shop" target="1.8" />
-      <module name="Spring-Java-Config" target="1.8" />
+      <module name="ocak" target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

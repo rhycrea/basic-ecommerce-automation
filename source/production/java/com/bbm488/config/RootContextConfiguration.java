@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 
 @Configuration
 @ComponentScan(
-        basePackages = "com.bbm488.site",
+        basePackages = "com.bbm488",
         excludeFilters = @ComponentScan.Filter(Controller.class)
 )
 public class RootContextConfiguration

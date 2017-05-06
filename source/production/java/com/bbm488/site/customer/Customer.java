@@ -1,10 +1,13 @@
 package com.bbm488.site.customer;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * Created by Aybars on 6.04.2017.
  */
+@Entity
+@Table(name="customer")
 public class Customer implements Serializable{
     private String uname;
     private String upass;
@@ -14,6 +17,8 @@ public class Customer implements Serializable{
     private String apt;
     private String room;
 
+    @Id
+    @Column(name = "uname", nullable = false, unique = true)
     public String getUname() {
         return uname;
     }
@@ -22,6 +27,7 @@ public class Customer implements Serializable{
         this.uname = uname;
     }
 
+    @Column(name = "upass")
     public String getUpass() {
         return upass;
     }
@@ -30,6 +36,7 @@ public class Customer implements Serializable{
         this.upass = upass;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -38,6 +45,7 @@ public class Customer implements Serializable{
         this.name = name;
     }
 
+    @Column(name = "surname")
     public String getSurname() {
         return surname;
     }
@@ -46,6 +54,7 @@ public class Customer implements Serializable{
         this.surname = surname;
     }
 
+    @Column(name = "floor")
     public String getFloor() {
         return floor;
     }
@@ -54,6 +63,7 @@ public class Customer implements Serializable{
         this.floor = floor;
     }
 
+    @Column(name = "apt")
     public String getApt() {
         return apt;
     }
@@ -62,6 +72,7 @@ public class Customer implements Serializable{
         this.apt = apt;
     }
 
+    @Column(name = "room")
     public String getRoom() {
         return room;
     }

@@ -1,7 +1,7 @@
 <%--@elvariable id="createFailed" type="java.lang.Boolean"--%>
 <%--@elvariable id="customerCrudForm" type="com.bbm488.CustomerRegistration.Form"--%>
 <template:owner htmlTitle="Customer CRUD" bodyTitle="Customer CRUD">
-    You must log in to access the customer support site.<br /><br />
+    Use patron/patron for owner of the shop. This record can be changed in Owner class.<br /><br />
     <c:if test="${createFailed}">
         <b>The username you entered already registered!</b><br /><br />
     </c:if>

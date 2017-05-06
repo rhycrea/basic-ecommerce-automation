@@ -1,4 +1,4 @@
-<%--@elvariable id="orderDB" type="java.util.Map<Integer, com.bbm488.site.Order>"--%>
+<%--@elvariable id="orderDB" type="java.util.List<com.bbm488.site.Order>"--%>
 <%--@elvariable id="deliveryForm" type="com.bbm488.site.owner.DeliveryController.Form"--%>
 
 <template:owner htmlTitle="Delivery" bodyTitle="Delivery">
@@ -21,19 +21,19 @@
                 <c:forEach items="${orderDB}" var="order">
                     <form:form method="post" modelAttribute="deliveryForm">
                         <tr class="listing">
-                            <td class="listing"><b><c:out value="${order.value.productName}" /></b></td>
-                            <td class="listing"><b><c:out value="${order.value.buyer}" /></b></td>
-                            <td class="listing"><c:out value="${order.value.pcs}" /></td>
-                            <td class="listing"><c:out value="${order.value.totalPrice}" /></td>
-                            <td class="listing"><c:out value="${order.value.orderDate}" /></td>
-                            <td class="listing"><c:out value="${order.value.isSent}" /></td>
-                            <td class="listing"><c:out value="${order.value.sentDate}" /></td>
+                            <td class="listing"><b><c:out value="${order.productName}" /></b></td>
+                            <td class="listing"><b><c:out value="${order.buyer}" /></b></td>
+                            <td class="listing"><c:out value="${order.pcs}" /></td>
+                            <td class="listing"><c:out value="${order.totalPrice}$" /></td>
+                            <td class="listing"><c:out value="${order.orderDate}" /></td>
+                            <td class="listing"><c:out value="${order.isSent}" /></td>
+                            <td class="listing"><c:out value="${order.sentDate}" /></td>
                             <td class="listing">
-                                <c:if test="${!order.value.isSent}">
+                                <c:if test="${!order.isSent}">
                                     <input type="submit" value="Deliver!" />
                                 </c:if>
                             </td>
-                            <form:hidden path="orderID" style="display:none" value="${order.key}"/>
+                            <form:hidden path="orderID" style="display:none" value="${order.ID}"/>
                         </tr  >
                     </form:form>
                 </c:forEach>

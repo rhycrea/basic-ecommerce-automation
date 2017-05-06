@@ -1,7 +1,7 @@
 <%--@elvariable id="loginFailed" type="java.lang.Boolean"--%>
 <%--@elvariable id="loginForm" type="com.bbm488.site.MainController.Form"--%>
 <template:login htmlTitle="Log In" bodyTitle="Log In">
-    Use patron/patron for owner of the e-commerce. This record can be changed in Owner class.<br /><br />
+    Use patron/patron for owner of the shop. This record can be changed in Owner class.<br /><br />
     <c:if test="${loginFailed}">
         <b>The username and password you entered are not correct. Please try
             again.</b><br /><br />
