@@ -1,17 +1,16 @@
-# basic-ecommerce-automation
-Basic eCommerce automation with Spring-MVC and Hibernate.
+# basic-ecommerce-webapp
+Basic eCommerce web application using Spring-MVC and Hibernate. I published it for educational purposes.
 
-Just open&run the project with IntelliJ IDEA. 
 By default project settings, login page can be accessed via URL: http://localhost:8080/shop
 
-Ever so project is self-explanatory, here is a little information:
+*Note: Currently, application is lack of a pretty gui.*
 
 ### General
 - .tag templates used as outline view modules of the project.
 - Databases are handled by Hibernate
 - Hibernate configured with PostgreSQL default in HibernateConfig.java
 - GenericDao approach used for handling database operations.
-- Authorization is handling by Spring-Filters
+- Authorization is handling by Spring-Filters. (by username embedded in cache. a lazy way.)
 
 ### Owner
 - Owner hardcoded as uname/pass = patron/patron and can only be changed within Owner class.
